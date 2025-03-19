@@ -55,18 +55,18 @@ data_hoje = f'{dia_atual} de {mes_corrente} de {ano_atual}'
 data_hoje_temp = hoje.strftime('%d-%m-%Y')
 
 # Caminho da pasta
-# pasta = f"C:\\Users\\{USERNAME}\\tecnico\\PGR-GRO\\FORMATAÇÃO\\LTCAT"
+# pasta = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT"
 
 # Caminho do arquivo .docx
-# template_file_path = f"C:\\Users\\{USERNAME}\\tecnico\\PGR-GRO\\FORMATAÇÃO\\TEMPLATE\\template_ltcat_padrao.docx"
-# pasta_dados = f"C:\\Users\\{USERNAME}\\tecnico\\PGR-GRO\\FORMATAÇÃO\\LTCAT"
-# pasta_executados = f"C:\\Users\\{USERNAME}\\tecnico\\PGR-GRO\\00 - RENOVADOS 2024"
-# caminho_salvar_arquivo_modificado = f'C:\\Users\\{USERNAME}\\tecnico\\PGR-GRO\\FORMATAÇÃO\\LTCAT\\documento_modificado.docx'
-# caminho_salvar_pdf = f"C:\\Users\\{USERNAME}\\tecnico\\PGR-GRO\\00 - RENOVADOS 2024\\{mes_atual} {ano_atual} - LTCAT - nome_empresa.pdf"
-# caminho_salvar_doc = f"C:\\Users\\{USERNAME}\\tecnico\\PGR-GRO\\00 - RENOVADOS 2024\\{mes_atual} {ano_atual} - LTCAT - nome_empresa.docx"
+# template_file_path = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\FORMATAÇÃO\\TEMPLATE\\template_ltcat_padrao.docx"
+# pasta_dados = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT"
+# pasta_executados = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\00 - RENOVADOS 2024"
+# caminho_salvar_arquivo_modificado = f'C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT\\documento_modificado.docx'
+# caminho_salvar_pdf = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\00 - RENOVADOS 2024\\{mes_atual} {ano_atual} - LTCAT - nome_empresa.pdf"
+# caminho_salvar_doc = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\00 - RENOVADOS 2024\\{mes_atual} {ano_atual} - LTCAT - nome_empresa.docx"
 
-# caminho_arquivo_rtf = f"C:\\Users\\{USERNAME}\\tecnico\\PGR-GRO\\FORMATAÇÃO\\LTCAT",
-# arquivo_pdf_convertido =f'C:\\Users\\{USERNAME}\\tecnico\\PGR-GRO\\FORMATAÇÃO\\LTCAT\\documento_convertido.pdf'
+# caminho_arquivo_rtf = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT",
+# arquivo_pdf_convertido =f'C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT\\documento_convertido.pdf'
 
 
 #SUBIR NO CLIENTE"
@@ -74,15 +74,15 @@ data_hoje_temp = hoje.strftime('%d-%m-%Y')
 pasta = f"\\\\192.168.0.2\\tecnico\\PGR - GRO\\FORMATAÇÃO\\TEMPLATE\\LTCAT"
 
 # Caminho do arquivo .docx
-template_file_path = f"\\\\192.168.0.2\\tecnico\\PGR-GRO\\FORMATAÇÃO\\TEMPLATE\\template_ltcat_padrao.docx"
-pasta_dados = f"\\\\192.168.0.2\\tecnico\\PGR-GRO\\FORMATAÇÃO\\LTCAT"
-pasta_executados = f"\\\\192.168.0.2\\tecnico\\PGR-GRO\\00 - RENOVADOS 2024"
-caminho_salvar_arquivo_modificado = f'\\\\192.168.0.2\\tecnico\\PGR-GRO\\FORMATAÇÃO\\LTCAT\\documento_modificado.docx'
-caminho_salvar_pdf = f"\\\\192.168.0.2\\tecnico\\PGR-GRO\\DOCUMENTOS FORMATADOS - ROBÔ\\{mes_atual} {ano_atual} - LTCAT - nome_empresa.pdf"
-caminho_salvar_doc = f"\\\\192.168.0.2\\tecnico\\PGR-GRO\\DOCUMENTOS FORMATADOS - ROBÔ\\{mes_atual} {ano_atual} - LTCAT - nome_empresa.docx"
+template_file_path = f"\\\\192.168.0.2\\tecnico\\PGR - GRO\\FORMATAÇÃO\\TEMPLATE\\template_ltcat_padrao.docx"
+pasta_dados = f"\\\\192.168.0.2\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT"
+pasta_executados = f"\\\\192.168.0.2\\tecnico\\PGR - GRO\\00 - RENOVADOS 2024"
+caminho_salvar_arquivo_modificado = f'\\\\192.168.0.2\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT\\documento_modificado.docx'
+caminho_salvar_pdf = f"\\\\192.168.0.2\\tecnico\\PGR - GRO\\DOCUMENTOS FORMATADOS - ROBÔ\\{mes_atual} {ano_atual} - LTCAT - nome_empresa.pdf"
+caminho_salvar_doc = f"\\\\192.168.0.2\\tecnico\\PGR - GRO\\DOCUMENTOS FORMATADOS - ROBÔ\\{mes_atual} {ano_atual} - LTCAT - nome_empresa.docx"
 
-caminho_arquivo_rtf = f"\\\\192.168.0.2\\tecnico\\PGR-GRO\\FORMATAÇÃO\\LTCAT",
-arquivo_pdf_convertido =f'\\\\192.168.0.2\\tecnico\\PGR-GRO\\FORMATAÇÃO\\LTCAT\\documento_convertido.pdf'
+caminho_arquivo_rtf = f"\\\\192.168.0.2\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT",
+arquivo_pdf_convertido =f'\\\\192.168.0.2\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT\\documento_convertido.pdf'
 
 # Encontrar todos os arquivos .pdf e .docx
 arquivos_pdf = glob.glob(os.path.join(pasta, "*.pdf"))

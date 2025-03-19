@@ -179,6 +179,9 @@ def processar_arquivos(progress_label, progress_bar):
                     tamanho = 16 if chave == "{{nome_empresa2}}" else 8
 
                     # Recria os runs com o novo texto e aplica negrito ao valor
+                    if valor == " " or valor == "":
+                        valor = "N/A"
+                        
                     partes = novo_texto.split(valor)
                     if len(partes) == 2:
                         # Primeiro run com o texto antes do valor
@@ -216,8 +219,10 @@ def processar_arquivos(progress_label, progress_bar):
             ano = agora.strftime('%Y')
             return f"{mes_corrente} de {ano}"
 
+        cnpj_busca = arquivo_dados.split('-')[2].replace(' ','')
+
         # URL e cabeçalhos da API
-        url = "https://api.cnpja.com/office/14980183000163"
+        url = f"https://api.cnpja.com/office/{cnpj_busca}"
         headers = {
             "Authorization": "ec1ea1b9-cb4f-460d-8ac1-3cba089fb252-1b1de35e-1616-46e6-9f76-737d7a18194d"
         }
@@ -229,9 +234,9 @@ def processar_arquivos(progress_label, progress_bar):
             data = response.json()
             cnpj = data.get("taxId", "********")
             company = data.get("company", {})
-            nome_empresa = company.get("name", "********").upper()
-            porte = data['company']['size']['acronym']
-            nome_fantasia = data.get("alias", "********").upper()
+            nome_empresa = (company.get("name", "********") or "********").upper()
+            porte = (data['company']['size']['acronym'] or "********")
+            nome_fantasia = (data.get("alias") or "********").upper()
             data_abertura = data.get("founded", "********").upper()
             data_sit_cad = data.get("statusDate", "********")
             status = data.get("status", {})
@@ -245,7 +250,7 @@ def processar_arquivos(progress_label, progress_bar):
             address = data.get("address", {})
             logradouro = address.get('street', 'Logradouro não disponível').upper()
             numero = address.get('number', 'Número não disponível')
-            complemento = address.get('details', 'Complemento não disponível').upper()
+            complemento = (address.get('details', 'Complemento não disponível') or '*******').upper()
             bairro = address.get('district', 'Bairro não disponível').upper()
             municipio = address.get('city', 'Cidade não disponível').upper()
             uf = address.get('state', 'UF não disponível').upper()
@@ -267,8 +272,7 @@ def processar_arquivos(progress_label, progress_bar):
             codigo_completo = f"{codigo} - {atividade}"
 
             atividade_sec = data.get("sideActivities", [])
-            atividade_sec_text = ', '.join(
-                atividade_sec) if atividade_sec else "Não informada"
+            atividade_sec_text = ', '.join([atividade.get('text', '-') for atividade in atividade_sec]) if atividade_sec else "Não informada"
 
             # Substituições
             replacements = {
@@ -404,7 +408,6 @@ def processar_arquivos(progress_label, progress_bar):
                 # Inicia o Microsoft Word
                 word = win32com.client.gencache.EnsureDispatch('Word.Application')
                 word.Visible = False  # Torna invisível para o usuário
-
                 # Abre o arquivo RTF
                 doc = word.Documents.Open(os.path.abspath(input_file))
 

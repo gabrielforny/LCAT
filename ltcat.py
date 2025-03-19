@@ -16,6 +16,7 @@ import tkinter as tk
 from tkinter import ttk
 import pythoncom
 import shutil
+from docx.enum.text import WD_BREAK
 
 USERNAME = os.getenv("USERNAME")
 
@@ -54,34 +55,34 @@ data_hoje = f'{dia_atual} de {mes_corrente} de {ano_atual}'
 data_hoje_temp = hoje.strftime('%d-%m-%Y')
 
 # Caminho da pasta
-pasta = f"C:\\Users\\{USERNAME}\\tecnico\\PGR-GRO\\FORMATAÇÃO\\LTCAT"
+# pasta = f"C:\\Users\\{USERNAME}\\tecnico\\PGR-GRO\\FORMATAÇÃO\\LTCAT"
 
 # Caminho do arquivo .docx
-template_file_path = f"C:\\Users\\{USERNAME}\\tecnico\\PGR-GRO\\FORMATAÇÃO\\TEMPLATE\\template_ltcat_padrao.docx"
-pasta_dados = f"C:\\Users\\{USERNAME}\\tecnico\\PGR-GRO\\FORMATAÇÃO\\LTCAT"
-pasta_executados = f"C:\\Users\\{USERNAME}\\tecnico\\PGR-GRO\\00 - RENOVADOS 2024"
-caminho_salvar_arquivo_modificado = f'C:\\Users\\{USERNAME}\\tecnico\\PGR-GRO\\FORMATAÇÃO\\LTCAT\\documento_modificado.docx'
-caminho_salvar_pdf = f"C:\\Users\\{USERNAME}\\tecnico\\PGR-GRO\\00 - RENOVADOS 2024\\{mes_atual} {ano_atual} - LTCAT - nome_empresa.pdf"
-caminho_salvar_doc = f"C:\\Users\\{USERNAME}\\tecnico\\PGR-GRO\\00 - RENOVADOS 2024\\{mes_atual} {ano_atual} - LTCAT - nome_empresa.docx"
+# template_file_path = f"C:\\Users\\{USERNAME}\\tecnico\\PGR-GRO\\FORMATAÇÃO\\TEMPLATE\\template_ltcat_padrao.docx"
+# pasta_dados = f"C:\\Users\\{USERNAME}\\tecnico\\PGR-GRO\\FORMATAÇÃO\\LTCAT"
+# pasta_executados = f"C:\\Users\\{USERNAME}\\tecnico\\PGR-GRO\\00 - RENOVADOS 2024"
+# caminho_salvar_arquivo_modificado = f'C:\\Users\\{USERNAME}\\tecnico\\PGR-GRO\\FORMATAÇÃO\\LTCAT\\documento_modificado.docx'
+# caminho_salvar_pdf = f"C:\\Users\\{USERNAME}\\tecnico\\PGR-GRO\\00 - RENOVADOS 2024\\{mes_atual} {ano_atual} - LTCAT - nome_empresa.pdf"
+# caminho_salvar_doc = f"C:\\Users\\{USERNAME}\\tecnico\\PGR-GRO\\00 - RENOVADOS 2024\\{mes_atual} {ano_atual} - LTCAT - nome_empresa.docx"
 
-caminho_arquivo_rtf = f"C:\\Users\\{USERNAME}\\tecnico\\PGR-GRO\\FORMATAÇÃO\\LTCAT",
-arquivo_pdf_convertido =f'C:\\Users\\{USERNAME}\\tecnico\\PGR-GRO\\FORMATAÇÃO\\LTCAT\\documento_convertido.pdf'
+# caminho_arquivo_rtf = f"C:\\Users\\{USERNAME}\\tecnico\\PGR-GRO\\FORMATAÇÃO\\LTCAT",
+# arquivo_pdf_convertido =f'C:\\Users\\{USERNAME}\\tecnico\\PGR-GRO\\FORMATAÇÃO\\LTCAT\\documento_convertido.pdf'
 
 
 #SUBIR NO CLIENTE"
 # Caminho da pasta
-# pasta = f"\\\\192.168.0.2\\tecnico\\PGR - GRO\\FORMATAÇÃO\\TEMPLATE\\template_ltcat_padrao.docx"
+pasta = f"\\\\192.168.0.2\\tecnico\\PGR - GRO\\FORMATAÇÃO\\TEMPLATE\\LTCAT"
 
 # Caminho do arquivo .docx
-# template_file_path = f"\\\\192.168.0.2\\tecnico\\PGR-GRO\\FORMATAÇÃO\\TEMPLATE\\template_ltcat_padrao.docx"
-# pasta_dados = f"\\\\192.168.0.2\\tecnico\\PGR-GRO\\FORMATAÇÃO\\LTCAT"
-# pasta_executados = f"\\\\192.168.0.2\\tecnico\\PGR-GRO\\00 - RENOVADOS 2024"
-# caminho_salvar_arquivo_modificado = f'\\\\192.168.0.2\\tecnico\\PGR-GRO\\FORMATAÇÃO\\LTCAT\\documento_modificado.docx'
-# caminho_salvar_pdf = f"\\\\192.168.0.2\\tecnico\\PGR-GRO\\00 - RENOVADOS 2024\\{mes_atual} {ano_atual} - LTCAT - nome_empresa.pdf"
-# caminho_salvar_doc = f"\\\\192.168.0.2\\tecnico\\PGR-GRO\\00 - RENOVADOS 2024\\{mes_atual} {ano_atual} - LTCAT - nome_empresa.docx"
+template_file_path = f"\\\\192.168.0.2\\tecnico\\PGR-GRO\\FORMATAÇÃO\\TEMPLATE\\template_ltcat_padrao.docx"
+pasta_dados = f"\\\\192.168.0.2\\tecnico\\PGR-GRO\\FORMATAÇÃO\\LTCAT"
+pasta_executados = f"\\\\192.168.0.2\\tecnico\\PGR-GRO\\00 - RENOVADOS 2024"
+caminho_salvar_arquivo_modificado = f'\\\\192.168.0.2\\tecnico\\PGR-GRO\\FORMATAÇÃO\\LTCAT\\documento_modificado.docx'
+caminho_salvar_pdf = f"\\\\192.168.0.2\\tecnico\\PGR-GRO\\00 - RENOVADOS 2024\\{mes_atual} {ano_atual} - LTCAT - nome_empresa.pdf"
+caminho_salvar_doc = f"\\\\192.168.0.2\\tecnico\\PGR-GRO\\00 - RENOVADOS 2024\\{mes_atual} {ano_atual} - LTCAT - nome_empresa.docx"
 
-# caminho_arquivo_rtf = f"\\\\192.168.0.2\\tecnico\\PGR-GRO\\FORMATAÇÃO\\LTCAT",
-# arquivo_pdf_convertido =f'\\\\192.168.0.2\\tecnico\\PGR-GRO\\FORMATAÇÃO\\LTCAT\\documento_convertido.pdf'
+caminho_arquivo_rtf = f"\\\\192.168.0.2\\tecnico\\PGR-GRO\\FORMATAÇÃO\\LTCAT",
+arquivo_pdf_convertido =f'\\\\192.168.0.2\\tecnico\\PGR-GRO\\FORMATAÇÃO\\LTCAT\\documento_convertido.pdf'
 
 # Encontrar todos os arquivos .pdf e .docx
 arquivos_pdf = glob.glob(os.path.join(pasta, "*.pdf"))
@@ -121,6 +122,25 @@ def mover_arquivos_para_executados():
                 print(f"Arquivo {arquivo_dados} movido para a pasta 'Executados'.")
     except Exception as e:
         print(f"Erro ao mover arquivos: {e}")
+
+def ajustar_conclusao_no_docx(caminho_arquivo):
+    # Carrega o documento
+    doc = Document(caminho_arquivo)
+    
+    # Define o texto que marca o início da seção 9
+    texto_busca = "CONCLUSÃO DO LAUDO TÉCNICO DAS CONDIÇÕES AMBIENTAIS DO TRABALHO – LTCAT"
+    
+    for i, paragrafo in enumerate(doc.paragraphs):
+        if texto_busca in paragrafo.text:
+            print("Quebrando linha")
+            novo_paragrafo = doc.paragraphs[i]._element
+            run = paragrafo.insert_paragraph_before().add_run()
+            run.add_break(WD_BREAK.PAGE)
+            break  # Sai do loop após encontrar e modificar
+    
+    # Salva o novo documento
+    doc.save(caminho_arquivo)
+    print(f"Documento ajustado salvo em: {caminho_arquivo}")
 
 def processar_arquivos(progress_label, progress_bar):
     progress_label.config(text="Carregando arquivos da pasta...")
@@ -398,7 +418,6 @@ def processar_arquivos(progress_label, progress_bar):
             # Salvar o documento modificado
             doc.save(output_path)
             print(f"Documento salvo com sucesso em {output_path}")
-
 
         def rtf_to_pdf(input_file, output_file):
             # Initialize COM for this thread
@@ -852,7 +871,6 @@ def processar_arquivos(progress_label, progress_bar):
                     substituir_marcacoes(caminho_salvar_arquivo_modificado, variaveis,
                                          caminho_salvar_doc.replace('nome_empresa', nome_empresa))
 
-
         ler_pdf(arquivo_pdf_convertido)
         progress_label.config(text="Salvando arquivo como PDF...")
 
@@ -881,6 +899,8 @@ def processar_arquivos(progress_label, progress_bar):
 
         # Atualizar índice
         atualizar_indice(caminho_salvar_arquivo_modificado)
+        
+        # ajustar_conclusao_no_docx(caminho_salvar_arquivo_modificado)
         
         time.sleep(2)
         

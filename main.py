@@ -651,6 +651,7 @@ def processar_arquivos(progress_label, progress_bar):
                         meioPropagacao2 = resultado.group(1).strip()
                         print(f"Meio de Propagação: {meioPropagacao2}")
                     else:
+                        meioPropagacao2 = "N/A"
                         print("Meio de Propagação não encontrado.")
 
                     # Expressão regular para capturar o texto após "Frequência"
@@ -663,6 +664,7 @@ def processar_arquivos(progress_label, progress_bar):
                         frequencia2 = resultado.group(1).strip()
                         print(f"Exposição Habitual: {frequencia2}")
                     else:
+                        frequencia2 = "N/A"
                         print("Texto após 'Frequência' não encontrado.")
 
                     # Expressão regular para capturar "Gravidade" e o texto associado
@@ -675,6 +677,7 @@ def processar_arquivos(progress_label, progress_bar):
                         gravidade2 = resultado.group(1).strip()
                         print(f"Gravidade: {gravidade2}")
                     else:
+                        gravidade2 = "N/A"
                         print("Gravidade não encontrada.")
 
                     # Expressão regular para capturar o texto após "Nível de Risco"
@@ -687,6 +690,7 @@ def processar_arquivos(progress_label, progress_bar):
                         nivelRisco2 = resultado.group(1).strip()
                         print(f"Nível de Risco: {nivelRisco2}")
                     else:
+                        nivelRisco2 = "N/A"
                         print("Nível de Risco não encontrado.")
 
                     # Expressão regular para capturar o tempo de exposição
@@ -699,6 +703,7 @@ def processar_arquivos(progress_label, progress_bar):
                         tempoExposicao2 = resultado.group(1).strip()
                         print(f"Tempo de Exposição: {tempoExposicao2}")
                     else:
+                        tempoExposicao2 = "N/A"
                         print("Tempo de Exposição não encontrado.")
 
                     # Expressão regular para capturar a data e o valor de dB(A)
@@ -763,6 +768,7 @@ def processar_arquivos(progress_label, progress_bar):
                         fonteGeradora2 = resultado.group(1).strip()
                         print(f"Texto após 'Fonte Geradora': {fonteGeradora2}")
                     else:
+                        fonteGeradora2 = "N/A"
                         print("Dados não encontrados.")
 
                     # Expressão regular para capturar as partes
@@ -777,6 +783,8 @@ def processar_arquivos(progress_label, progress_bar):
                         periculosidade2 = resultado.group(2).strip()
                         print(f"Periculosidade: {periculosidade2}")
                     else:
+                        insalubridade2 = "N/A"
+                        periculosidade2 = "N/A"
                         print("Dados não encontrados.")
 
                     # Expressão regular para capturar as partes
@@ -789,6 +797,7 @@ def processar_arquivos(progress_label, progress_bar):
                         aposentadoria2 = resultado.group(1).strip()
                         print(f"Aposentadoria Especial: {aposentadoria2}")
                     else:
+                        aposentadoria2 = "N/A"
                         print("Dados não encontrados.")
                     # Expressão regular para capturar as partes
                     padrao = r"Fundamentação Legal\s+([\s\S]*?)\s+Conclusão"
@@ -801,6 +810,7 @@ def processar_arquivos(progress_label, progress_bar):
 
                         print(f"Fundamentação Legal:\n{fundamentacaoLegal2}")
                     else:
+                        fundamentacaoLegal2 = "N/A"
                         print("Dados não encontrados.")
 
                     # Expressão regular para capturar a seção "Conclusão"
@@ -814,6 +824,7 @@ def processar_arquivos(progress_label, progress_bar):
 
                         print(f"Conclusão:\n{conclusao2}")
                     else:
+                        conclusao2 = "N/A"
                         print("Dados não encontrados.")
 
                     variaveis = {

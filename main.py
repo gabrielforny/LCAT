@@ -17,6 +17,8 @@ from tkinter import ttk
 import pythoncom
 import shutil
 from docx.enum.text import WD_BREAK
+from win32com.client import gencache
+import sys
 
 USERNAME = os.getenv("USERNAME")
 
@@ -67,7 +69,6 @@ data_hoje_temp = hoje.strftime('%d-%m-%Y')
 
 # caminho_arquivo_rtf = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT",
 # arquivo_pdf_convertido =f'C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT\\documento_convertido.pdf'
-
 
 #SUBIR NO CLIENTE"
 # Caminho da pasta
@@ -123,6 +124,46 @@ def mover_arquivos_para_executados():
     except Exception as e:
         print(f"Erro ao mover arquivos: {e}")
 
+def inserir_conteudo_rtf_no_docx(rtf_path, docx_path, tag):
+    # Forçar recriação da cache COM
+    try:
+        # Limpar cache existente
+        gencache.Rebuild()  # Método mais confiável que deletar manualmente
+        
+        # Obter e remover módulo problemático
+        module = gencache.GetModuleForProgID("Word.Application")
+        if module and module.__name__ in sys.modules:
+            del sys.modules[module.__name__]
+    except Exception as e:
+        print(f"Aviso na limpeza de cache: {e}")
+
+    pythoncom.CoInitialize()
+    try:
+        # Usar EnsureDispatch com nova cache
+        word = win32com.client.gencache.EnsureDispatch("Word.Application")
+        word.Visible = False
+
+        # Operações com documentos
+        rtf_doc = word.Documents.Open(os.path.abspath(rtf_path))
+        rtf_doc.Content.Copy()
+        rtf_doc.Close(False)
+
+        docx_doc = word.Documents.Open(os.path.abspath(docx_path))
+        word.Selection.Find.Execute(tag)
+        if word.Selection.Find.Found:
+            word.Selection.Paste()
+
+        docx_doc.Save()
+        docx_doc.Close()
+        word.Quit()
+        print("Conteúdo RTF inserido com sucesso!")
+        
+    except Exception as e:
+        print(f"Erro crítico: {e}")
+        raise
+    finally:
+        pythoncom.CoUninitialize()
+        
 def ajustar_conclusao_no_docx(caminho_arquivo):
     # Carrega o documento
     doc = Document(caminho_arquivo)
@@ -330,11 +371,18 @@ def processar_arquivos(progress_label, progress_bar):
             template_file_path,
             replacements
         )
+        
+        rtf_path = os.path.join(caminho_arquivo_rtf[0], arquivo_rtf_para_leitura[0])
+
+        # Insere o conteúdo do RTF no DOCX modificado
+        inserir_conteudo_rtf_no_docx(
+            rtf_path,
+            caminho_salvar_arquivo_modificado,
+            "{{conteudo-tabela}}"
+        )
 
         # Obter a data de hoje
         hoje = datetime.now()
-
-        data_hoje2 = hoje.strftime('%d/%m/%Y')
 
         def substituir_marcacoes(doc_path, variaveis, output_path):
             """Substitui variáveis no documento aplicando Verdana 8 para variáveis específicas e mantendo negrito para data_diligencia."""

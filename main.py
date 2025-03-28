@@ -89,7 +89,6 @@ arquivo_pdf_convertido =f'\\\\192.168.0.2\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTC
 # Encontrar todos os arquivos .pdf e .docx
 arquivos_pdf = glob.glob(os.path.join(pasta, "*.pdf"))
 arquivos_docx = glob.glob(os.path.join(pasta, "*.docx"))
-
 try:
     # Verificar se o processo winword.exe está em execução
     processo = subprocess.run("tasklist /FI \"IMAGENAME eq winword.exe\"", capture_output=True, text=True, shell=True)
@@ -103,7 +102,7 @@ try:
 except subprocess.CalledProcessError as e:
     print(f"Erro ao tentar fechar o Word: {e}")
     print(f"Saída do erro: {e.output}")
-        
+
 # Verificar se há arquivos para excluir
 if not arquivos_pdf and not arquivos_docx:
     print("Nenhum arquivo .pdf ou .docx encontrado na pasta.")
@@ -139,11 +138,6 @@ def mover_arquivos_para_executados():
     except Exception as e:
         print(f"Erro ao mover arquivos: {e}")
 
-def limpar_texto(texto):
-    # Remove caracteres de controle (como \r, \x07) e espaços extras
-    texto_limpo = re.sub(r'[\r\x07]', '', texto)  # Remove \r e \x07
-    return texto_limpo.strip() 
-
 def inserir_conteudo_rtf_no_docx(rtf_path, docx_path, tag):
     # Forçar recriação da cache COM
     try:
@@ -165,45 +159,13 @@ def inserir_conteudo_rtf_no_docx(rtf_path, docx_path, tag):
 
         # Operações com documentos
         rtf_doc = word.Documents.Open(os.path.abspath(rtf_path))
-        
-        # Encontrar primeiro "Setor: " e definir intervalo de cópia
-        finder = rtf_doc.Content.Find
-        finder.Text = "Setor: "
-        if finder.Execute():
-            start_position = finder.Parent.Start
-            copy_range = rtf_doc.Range(Start=start_position, End=rtf_doc.Content.End)
-            copy_range.Copy()
-        else:
-            rtf_doc.Content.Copy()
-        
+        rtf_doc.Content.Copy()
         rtf_doc.Close(False)
 
         docx_doc = word.Documents.Open(os.path.abspath(docx_path))
         word.Selection.Find.Execute(tag)
         if word.Selection.Find.Found:
             word.Selection.Paste()
-            
-            find_cargo = docx_doc.Content.Find
-            find_cargo.Text = "Cargo: "
-            find_cargo.Forward = True
-            # Lista para armazenar posições
-            cargo_positions = []
-            
-            # Primeira busca
-            while find_cargo.Execute():
-                start_pos = find_cargo.Parent.Start
-                prev_text = docx_doc.Range(Start=start_pos - 50, End=start_pos).Text 
-                
-                prev_text = limpar_texto(prev_text)
-                if "Especificação dos Riscos" not in prev_text:  # Ajuste conforme necessário
-                    cargo_positions.append(start_pos)
-                
-                word.Selection.Collapse(Direction=win32com.client.constants.wdCollapseEnd)
-            
-            # Inserir quebras em ordem reversa para evitar deslocamento
-            for pos in reversed(cargo_positions):
-                rng = docx_doc.Range(Start=pos, End=pos)
-                rng.InsertBreak(Type=win32com.client.constants.wdPageBreak)
 
         docx_doc.Save()
         docx_doc.Close()

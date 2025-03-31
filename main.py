@@ -78,7 +78,7 @@ pasta = f"\\\\192.168.0.2\\tecnico\\PGR - GRO\\FORMATAÇÃO\\TEMPLATE\\LTCAT"
 # Caminho do arquivo .docx
 template_file_path = f"\\\\192.168.0.2\\tecnico\\PGR - GRO\\FORMATAÇÃO\\TEMPLATE\\template_ltcat_padrao.docx"
 pasta_dados = f"\\\\192.168.0.2\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT"
-pasta_executados = f"\\\\192.168.0.2\\tecnico\\PGR - GRO\\00 - RENOVADOS 2024"
+pasta_executados = f"\\\\192.168.0.2\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT\\EXECUTADOS"
 caminho_salvar_arquivo_modificado = f'\\\\192.168.0.2\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT\\documento_modificado.docx'
 caminho_salvar_pdf = f"\\\\192.168.0.2\\tecnico\\PGR - GRO\\DOCUMENTOS FORMATADOS - ROBÔ\\{mes_atual} {ano_atual} - LTCAT - nome_empresa.pdf"
 caminho_salvar_doc = f"\\\\192.168.0.2\\tecnico\\PGR - GRO\\DOCUMENTOS FORMATADOS - ROBÔ\\{mes_atual} {ano_atual} - LTCAT - nome_empresa.docx"
@@ -204,12 +204,10 @@ def processar_arquivos(progress_label, progress_bar):
     # Listar todos os arquivos .rtf na pasta, ignorando arquivos temporários (~$)
     arquivos_dados = [f for f in os.listdir(pasta_dados) if f.endswith('.rtf') and not f.startswith('~$')]
 
-    arquivo_rtf_para_leitura = [f for f in os.listdir(caminho_arquivo_rtf[0]) if f.endswith('.rtf')]
-
     for arquivo_dados in arquivos_dados:
         progress_label.config(text=f"Processando arquivo: {arquivo_dados}...")
         time.sleep(1)
-
+        
         def format_date(date_str):
             try:
                 date_obj = datetime.fromisoformat(date_str.replace('Z', '+00:00'))
@@ -386,7 +384,7 @@ def processar_arquivos(progress_label, progress_bar):
             replacements
         )
         
-        rtf_path = os.path.join(caminho_arquivo_rtf[0], arquivo_rtf_para_leitura[0])
+        rtf_path = os.path.join(caminho_arquivo_rtf[0], arquivo_dados)
 
         # Insere o conteúdo do RTF no DOCX modificado
         inserir_conteudo_rtf_no_docx(
@@ -506,7 +504,7 @@ def processar_arquivos(progress_label, progress_bar):
                 pythoncom.CoUninitialize()  # Libera o COM
 
         rtf_to_pdf(
-            caminho_arquivo_rtf[0]+'\\'+arquivo_rtf_para_leitura[0],
+            caminho_arquivo_rtf[0]+'\\'+arquivo_dados,
             arquivo_pdf_convertido
         )
         
@@ -981,8 +979,8 @@ def processar_arquivos(progress_label, progress_bar):
             caminho_salvar_arquivo_modificado,
             caminho_salvar_pdf.replace("nome_empresa", nome_empresa))
         # Mover os arquivos processados para a pasta "Executados"
-        mover_arquivos_para_executados()
 
+    mover_arquivos_para_executados()
     progress_label.config(text="Processo concluído!")
     progress_bar.stop()
 #Função para iniciar a execução em uma thread separada

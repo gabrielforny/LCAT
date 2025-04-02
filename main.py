@@ -20,6 +20,7 @@ from docx.enum.text import WD_BREAK
 from win32com.client import gencache
 import sys
 import subprocess
+from fill_table_final import preencher_dados_tabelas_funcao
 
 USERNAME = os.getenv("USERNAME")
 
@@ -63,7 +64,7 @@ data_hoje_temp = hoje.strftime('%d-%m-%Y')
 # Caminho do arquivo .docx
 # template_file_path = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\FORMATAÇÃO\\TEMPLATE\\template_ltcat_padrao.docx"
 # pasta_dados = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT"
-# pasta_executados = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\00 - RENOVADOS 2024"
+# pasta_executados = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\LTCAT\\EXECUTADOS"
 # caminho_salvar_arquivo_modificado = f'C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT\\documento_modificado.docx'
 # caminho_salvar_pdf = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\00 - RENOVADOS 2024\\{mes_atual} {ano_atual} - LTCAT - nome_empresa.pdf"
 # caminho_salvar_doc = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\00 - RENOVADOS 2024\\{mes_atual} {ano_atual} - LTCAT - nome_empresa.docx"
@@ -207,6 +208,8 @@ def processar_arquivos(progress_label, progress_bar):
     for arquivo_dados in arquivos_dados:
         progress_label.config(text=f"Processando arquivo: {arquivo_dados}...")
         time.sleep(1)
+        
+        preencher_dados_tabelas_funcao(pasta_dados+"\\"+arquivo_dados, template_file_path)  
         
         def format_date(date_str):
             try:

@@ -88,8 +88,8 @@ caminho_arquivo_rtf = f"\\\\192.168.0.2\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT
 arquivo_pdf_convertido =f'\\\\192.168.0.2\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT\\documento_convertido.pdf'
 
 # Encontrar todos os arquivos .pdf e .docx
-arquivos_pdf = glob.glob(os.path.join(pasta, "*.pdf"))
-arquivos_docx = glob.glob(os.path.join(pasta, "*.docx"))
+arquivos_pdf = glob.glob(os.path.join(pasta_dados, "*.pdf"))
+arquivos_docx = glob.glob(os.path.join(pasta_dados, "*.docx"))
 try:
     # Verificar se o processo winword.exe está em execução
     processo = subprocess.run("tasklist /FI \"IMAGENAME eq winword.exe\"", capture_output=True, text=True, shell=True)
@@ -157,11 +157,43 @@ def inserir_conteudo_rtf_no_docx(rtf_path, docx_path, tag):
         # Usar EnsureDispatch com nova cache
         word = win32com.client.gencache.EnsureDispatch("Word.Application")
         word.Visible = False
-
-        # Operações com documentos
+        start_line_text = "Setor: "
+        
         rtf_doc = word.Documents.Open(os.path.abspath(rtf_path))
-        rtf_doc.Content.Copy()
-        rtf_doc.Close(False)
+        
+        start_range = None
+        end_range = None
+
+        for paragraph in rtf_doc.Paragraphs:
+            if start_line_text in paragraph.Range.Text:
+                start_range = paragraph.Range.Start
+                break
+        
+        if not start_range:
+            print(f"Texto '{start_line_text}' não encontrado.")
+            return
+
+        # 2. Encontrar a última tabela que contém "Conclusão"
+        for table in rtf_doc.Tables:
+            if "Conclusão" in table.Range.Text:
+                end_range = table.Range.End  # Atualiza sempre que encontrar
+
+        if not end_range:
+            print("Nenhuma tabela com 'Conclusão' encontrada.")
+            return
+
+        # 3. Ajustar fim da cópia se "Matriz de Risco" existir após "Conclusão"
+        for paragraph in rtf_doc.Paragraphs:
+            if "Matriz de Risco" in paragraph.Range.Text and paragraph.Range.Start > end_range:
+                end_range = paragraph.Range.Start  # Ajusta para antes de "Matriz de Risco"
+                break
+
+        # 4. Criar a seleção e copiar o conteúdo
+        selection_range = rtf_doc.Range(Start=start_range, End=end_range)
+        selection_range.Select()
+        word.Selection.Copy()
+
+        print("Conteúdo copiado com sucesso até 'Conclusão', ignorando 'Matriz de Risco'.")
 
         docx_doc = word.Documents.Open(os.path.abspath(docx_path))
         word.Selection.Find.Execute(tag)

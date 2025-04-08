@@ -230,13 +230,21 @@ def ajustar_conclusao_no_docx(caminho_arquivo):
     doc.save(caminho_arquivo)
     print(f"Documento ajustado salvo em: {caminho_arquivo}")
 
-def processar_arquivos(progress_label, progress_bar):
+def limpar_gen_py():
     try:
-        gen_py_path = gencache.GetGeneratePath()
+        temp_path = os.environ.get('TEMP', os.path.join(os.environ.get('LOCALAPPDATA'), 'Temp'))
+        gen_py_path = os.path.join(temp_path, 'gen_py')
+        
         if os.path.exists(gen_py_path):
             shutil.rmtree(gen_py_path)
+            print("Pasta gen_py removida com sucesso.")
+        else:
+            print("Pasta gen_py não encontrada.")
     except Exception as e:
-        print(f"Erro ao limpar cache COM: {e}")
+        print(f"Erro ao tentar remover pasta gen_py: {str(e)}")
+        
+def processar_arquivos(progress_label, progress_bar):
+    limpar_gen_py()
         
     progress_label.config(text="Carregando arquivos da pasta...")
     time.sleep(1)

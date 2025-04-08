@@ -1079,6 +1079,7 @@
    'C:\\Python312\\Lib\\site-packages\\et_xmlfile\\xmlfile.py',
    'PYMODULE'),
   ('fileinput', 'C:\\Python312\\Lib\\fileinput.py', 'PYMODULE'),
+  ('fill_table_final', 'C:\\Projetos\\LCAT\\fill_table_final.py', 'PYMODULE'),
   ('fnmatch', 'C:\\Python312\\Lib\\fnmatch.py', 'PYMODULE'),
   ('fractions', 'C:\\Python312\\Lib\\fractions.py', 'PYMODULE'),
   ('ftplib', 'C:\\Python312\\Lib\\ftplib.py', 'PYMODULE'),

@@ -231,6 +231,13 @@ def ajustar_conclusao_no_docx(caminho_arquivo):
     print(f"Documento ajustado salvo em: {caminho_arquivo}")
 
 def processar_arquivos(progress_label, progress_bar):
+    try:
+        gen_py_path = gencache.GetGeneratePath()
+        if os.path.exists(gen_py_path):
+            shutil.rmtree(gen_py_path)
+    except Exception as e:
+        print(f"Erro ao limpar cache COM: {e}")
+        
     progress_label.config(text="Carregando arquivos da pasta...")
     time.sleep(1)
     
@@ -922,57 +929,39 @@ def processar_arquivos(progress_label, progress_bar):
                         conclusao2 = "N/A"
                         print("Dados não encontrados.")
 
-                    variaveis = {
-                        'setor2': setor2,
-                        'atividadeOperacional2': atividadeOperacional2,
-                        'cargo2': cargo2,
-                        'desc_detal2': desc_detal2,
-                        'grupo2': grupo2,
-                        'agente2': agente2,
-                        'limiteTolerancia2': limite_tolerancia2,
-                        'nivelacao2': nivelacao2,
-                        'meioPropagacao2': meioPropagacao2,
-                        'frequencia2': frequencia2,
-                        'gravidade2': gravidade2,
-                        'nivelRisco2': nivelRisco2,
-                        'tempoExposicao2': tempoExposicao2,
-                        'data2': data2,
-                        'data_diligencia': data_diligencia,
-                        'medicao2': medicao2,
-                        'tecnicaUtilizada2': tecnicaUtilizada2,
-                        'equipamento2': equipamento,
-                        'fabricante2': fabricante,
-                        'modelo2': modelo,
-                        'numSerie2': numSerie2,
-                        'dataCalibracao2': dataCalibracao2,
-                        'fonteGeradora2': fonteGeradora2,
-                        'insalubridade2': insalubridade2,
-                        'periculosidade2': periculosidade2,
-                        'aposentadoria2': aposentadoria2,
-                        'fundamentacaoLegal2': fundamentacaoLegal2,
-                        'conclusao2': conclusao2
-                        # 'data_hoje2': data_hoje2,
-                        # 'unidade2': nome_empresa,
-                        # #'vigenciaPpra': vigenciaPpra,
-                        # 'empresa2': empresa,
-                        # 'endereco2': endereco2,
-                        # 'complemento2': complemento2,
-                        # 'cnpj2': cnpj2,
-                        # 'cep2': cep2,
-                        # 'cidade2': cidade2,
-                        # 'bairro2': bairro2,
-                        # 'uf2': uf2,
-                        # 'cnae2': cnae2,
-                        # 'grau_risco2': grau_risco2,
-                        # 'desc_cnae2': desc_cnae2,
-                        # 'previsto_titular2': previsto_titular2,
-                        # 'previsto_suplente2': previsto_suplente2,
-                        # 'previsto_designado2': previsto_designado2,
-                        # 'atual_titular2': atual_titular2,
-                        # 'atual_suplente2': atual_suplente2,
-                        # 'atual_designado2': atual_designado2,
-                        
-                    }
+                    nomes_variaveis = [
+                        'setor2',
+                        'atividadeOperacional2',
+                        'cargo2',
+                        'desc_detal2',
+                        'grupo2',
+                        'agente2',
+                        'limiteTolerancia2',
+                        'nivelacao2',
+                        'meioPropagacao2',
+                        'frequencia2',
+                        'gravidade2',
+                        'nivelRisco2',
+                        'tempoExposicao2',
+                        'data2',
+                        'data_diligencia',
+                        'medicao2',
+                        'tecnicaUtilizada2',
+                        'equipamento',
+                        'fabricante',
+                        'modelo',
+                        'numSerie2',
+                        'dataCalibracao2',
+                        'fonteGeradora2',
+                        'insalubridade2',
+                        'periculosidade2',
+                        'aposentadoria2',
+                        'fundamentacaoLegal2',
+                        'conclusao2'
+                    ]
+
+                    variaveis = {f"{nome}": (globals().get(nome, '-') or '-') for nome in nomes_variaveis}
+
                     # Substituir as marcações no documento
                     substituir_marcacoes(caminho_salvar_arquivo_modificado, variaveis,
                                          caminho_salvar_doc.replace('nome_empresa', nome_empresa))

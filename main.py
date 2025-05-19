@@ -58,10 +58,10 @@ data_hoje = f'{dia_atual} de {mes_corrente} de {ano_atual}'
 
 data_hoje_temp = hoje.strftime('%d-%m-%Y')
 
-# Caminho da pasta
+# # Caminho da pasta
 # pasta = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT"
 
-# Caminho do arquivo .docx
+# # Caminho do arquivo .docx
 # template_file_path = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\FORMATAÇÃO\\TEMPLATE\\template_ltcat_padrao.docx"
 # pasta_dados = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT"
 # pasta_executados = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\LTCAT\\EXECUTADOS"
@@ -242,6 +242,26 @@ def limpar_gen_py():
             print("Pasta gen_py não encontrada.")
     except Exception as e:
         print(f"Erro ao tentar remover pasta gen_py: {str(e)}")
+
+def extrair_data_ruido(rtf_path):
+    with open(rtf_path, 'r', encoding='latin-1') as file:
+        conteudo = file.read()
+
+    # Remove formatação RTF básica (simples)
+    texto_limpo = re.sub(r'{\\.*?}|\\[a-z]+\d*|{|}|[\r\n\t]', ' ', conteudo)
+    texto_limpo = re.sub(r'\s+', ' ', texto_limpo)  # remove excesso de espaços
+
+    # Busca a posição da primeira ocorrência de RUÍDO
+    match_ruido = re.search(r'(AGENTE.*?)RU[IÍ]DO', texto_limpo, re.IGNORECASE)
+    if match_ruido:
+        trecho_a_partir_do_ruido = texto_limpo[match_ruido.end():]
+
+        # Procura a primeira data depois do trecho com RUÍDO
+        match_data = re.search(r'\d{2}/\d{2}/\d{4}', trecho_a_partir_do_ruido)
+        if match_data:
+            return match_data.group(0)
+
+    return None
         
 def processar_arquivos(progress_label, progress_bar):
     limpar_gen_py()
@@ -255,6 +275,11 @@ def processar_arquivos(progress_label, progress_bar):
     for arquivo_dados in arquivos_dados:
         progress_label.config(text=f"Processando arquivo: {arquivo_dados}...")
         time.sleep(1)
+        
+        rtf_path =pasta_dados + "\\" + arquivo_dados
+
+        data_diligencia = extrair_data_ruido(rtf_path)
+        print("Data de diligência encontrada:", data_diligencia)
         
         preencher_dados_tabelas_funcao(pasta_dados+"\\"+arquivo_dados, template_file_path)  
         
@@ -425,7 +450,8 @@ def processar_arquivos(progress_label, progress_bar):
                 'dataSituacaoEsp': "*****",
                 'data_hoje': data_hoje,
                 'nome_empresarial': nome_empresa,
-                'data_hoje_temp': data_hoje_temp
+                'data_hoje_temp': data_hoje_temp,
+                'data_diligencia': data_diligencia
             }
         progress_label.config(text="Preenchendo template...")
         # Exemplo de uso
@@ -496,7 +522,7 @@ def processar_arquivos(progress_label, progress_bar):
 
                                 # Parte da variável (aplica Verdana 8 apenas nas variáveis da lista, e negrito para data_diligencia)
                                 novo_run = paragrafo.add_run(valor)
-                                if chave == "data_diligencia":
+                                if chave == "data_diligencia":  # Verifica se a chave corresponde a "data_diligencia":
                                     novo_run.bold = True  # Apenas negrito
                                     novo_run.font.name = fonte_original
                                     novo_run.font.size = tamanho_original
@@ -839,6 +865,7 @@ def processar_arquivos(progress_label, progress_bar):
                     # Verifica se encontrou os dados e exibe o resultado
                     if resultado:
                         data2 = resultado.group(1).strip()
+                        data_diligencia = resultado.group(1).strip()
                         print(f"Data: {data2}")
                         medicao2 = resultado.group(2).strip()
                         print(f"Valor de dB(A): {medicao2}")

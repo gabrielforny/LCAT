@@ -198,7 +198,9 @@ def inserir_conteudo_rtf_no_docx(rtf_path, docx_path, tag):
         docx_doc = word.Documents.Open(os.path.abspath(docx_path))
         word.Selection.Find.Execute(tag)
         if word.Selection.Find.Found:
-            word.Selection.Paste()
+            word.Selection.PasteAndFormat(16)  # Cola como texto simples
+            word.Selection.Font.Name = "Verdana"
+            word.Selection.Font.Size = 8
 
         docx_doc.Save()
         docx_doc.Close()

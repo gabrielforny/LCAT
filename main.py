@@ -66,8 +66,8 @@ data_hoje_temp = hoje.strftime('%d-%m-%Y')
 # pasta_dados = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT"
 # pasta_executados = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\LTCAT\\EXECUTADOS"
 # caminho_salvar_arquivo_modificado = f'C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT\\documento_modificado.docx'
-# caminho_salvar_pdf = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\00 - RENOVADOS 2024\\{mes_atual} {ano_atual} - LTCAT - nome_empresa.pdf"
-# caminho_salvar_doc = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\00 - RENOVADOS 2024\\{mes_atual} {ano_atual} - LTCAT - nome_empresa.docx"
+# caminho_salvar_pdf = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\00 - RENOVADOS 2024\\mes_do_documento {ano_atual} - LTCAT - nome_empresa.pdf"
+# caminho_salvar_doc = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\00 - RENOVADOS 2024\\mes_do_documento {ano_atual} - LTCAT - nome_empresa.docx"
 
 # caminho_arquivo_rtf = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT",
 # arquivo_pdf_convertido =f'C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT\\documento_convertido.pdf'
@@ -81,8 +81,8 @@ template_file_path = f"C:\\Users\\Usuario\\tecnico\\PGR - GRO\\FORMATAÇÃO\\TEM
 pasta_dados = f"C:\\Users\\Usuario\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT"
 pasta_executados = f"C:\\Users\\Usuario\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT\\EXECUTADOS"
 caminho_salvar_arquivo_modificado = f'C:\\Users\\Usuario\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT\\documento_modificado.docx'
-caminho_salvar_pdf = f"C:\\Users\\Usuario\\tecnico\\PGR - GRO\\DOCUMENTOS FORMATADOS - ROBÔ\\{mes_atual} {ano_atual} - LTCAT - nome_empresa.pdf"
-caminho_salvar_doc = f"C:\\Users\\Usuario\\tecnico\\PGR - GRO\\DOCUMENTOS FORMATADOS - ROBÔ\\{mes_atual} {ano_atual} - LTCAT - nome_empresa.docx"
+caminho_salvar_pdf = f"C:\\Users\\Usuario\\tecnico\\PGR - GRO\\DOCUMENTOS FORMATADOS - ROBÔ\\mes_do_documento {ano_atual} - LTCAT - nome_empresa.pdf"
+caminho_salvar_doc = f"C:\\Users\\Usuario\\tecnico\\PGR - GRO\\DOCUMENTOS FORMATADOS - ROBÔ\\mes_do_documento {ano_atual} - LTCAT - nome_empresa.docx"
 
 caminho_arquivo_rtf = f"C:\\Users\\Usuario\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT",
 arquivo_pdf_convertido =f'C:\\Users\\Usuario\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT\\documento_convertido.pdf'
@@ -117,6 +117,58 @@ else:
             print(f"Erro ao excluir {arquivo}: {e}")
 
     print("Todos os arquivos .pdf e .docx foram excluídos da pasta.")
+
+def obter_nome_documento(file_path):
+    # Extrai o nome do arquivo (sem o caminho completo)
+    file_name = os.path.basename(file_path)
+    
+    # Expressão regular para capturar o ano e o mês no formato esperado
+    match = re.search(r"(\w+)\s+(\d{4})\s+-.*?(\d{14})\s+-\s+(.+?)(?:\s+-\s+\d+.*)?$", file_name)
+    
+    if match:
+        year = match.group(2)
+        month = match.group(1).upper()  # Converter para maiúsculas
+        nome = match.group(4).replace('.docx','').replace('.doc','').replace('.rtf','').replace('.pdf','').replace('_manipulado','')
+
+        # Dicionário para mapear os meses para o formato desejado
+        meses = {
+            "JANEIRO": "JANEIRO",
+            "FEVEREIRO": "FEVEREIRO",
+            "MARÇO": "MARÇO",
+            "ABRIL": "ABRIL",
+            "MAIO": "MAIO",
+            "JUNHO": "JUNHO",
+            "JULHO": "JULHO",
+            "AGOSTO": "AGOSTO",
+            "SETEMBRO": "SETEMBRO",
+            "OUTUBRO": "OUTUBRO",
+            "NOVEMBRO": "NOVEMBRO",
+            "DEZEMBRO": "DEZEMBRO"
+        }
+
+        meses_num = {v: k for k, v in {
+            1: 'JANEIRO', 
+            2: 'FEVEREIRO', 
+            3: 'MARÇO', 
+            4: 'ABRIL',
+            5: 'MAIO',
+            6: 'JUNHO',
+            7: 'JULHO',
+            8: 'AGOSTO',
+            9: 'SETEMBRO',
+            10: 'OUTUBRO', 
+            11: 'NOVEMBRO',
+            12: 'DEZEMBRO'
+        }.items()}
+        
+        # Verifica se o mês está no dicionário e retorna o formato desejado
+        if month in meses:
+            numero_mes = meses_num.get(month)
+            return f"{meses[month]} DE {year}", nome, numero_mes
+        else:
+            raise ValueError("Mês não reconhecido no nome do arquivo.")
+    else:
+        raise ValueError("Formato do nome do arquivo inválido. Não foi possível extrair ano e mês.")
 
 def mover_arquivos_para_executados():
     try:
@@ -279,6 +331,8 @@ def processar_arquivos(progress_label, progress_bar):
         time.sleep(1)
         
         rtf_path =pasta_dados + "\\" + arquivo_dados
+
+        data_documento, nome, numero_mes = obter_nome_documento(pasta_dados+"\\"+arquivo_dados)
 
         data_diligencia = extrair_data_ruido(rtf_path)
         print("Data de diligência encontrada:", data_diligencia)
@@ -444,7 +498,7 @@ def processar_arquivos(progress_label, progress_bar):
                 'email': ', '.join(email_list),
                 'codigoDescricao': codigo_completo,
                 'codigoDescSec': atividade_sec_text,
-                'mes_ano': format_mes_ano(),
+                'mes_ano': data_documento,
                 'porte': porte,
                 'codigo_desc_nat': "*****",
                 'dataSitCadastral': format_date(data_sit_cad),
@@ -1001,7 +1055,7 @@ def processar_arquivos(progress_label, progress_bar):
 
                     # Substituir as marcações no documento
                     substituir_marcacoes(caminho_salvar_arquivo_modificado, variaveis,
-                                         caminho_salvar_doc.replace('nome_empresa', nome_empresa))
+                                         caminho_salvar_doc.replace('nome_empresa', nome_empresa).replace("mes_do_documento", numero_mes))
 
         ler_pdf(arquivo_pdf_convertido)
         progress_label.config(text="Salvando arquivo como PDF...")
@@ -1038,7 +1092,7 @@ def processar_arquivos(progress_label, progress_bar):
         
         rtf_to_pdf(
             caminho_salvar_arquivo_modificado,
-            caminho_salvar_pdf.replace("nome_empresa", nome_empresa))
+            caminho_salvar_pdf.replace("nome_empresa", nome_empresa).replace("mes_do_documento", numero_mes))
         # Mover os arquivos processados para a pasta "Executados"
 
     mover_arquivos_para_executados()

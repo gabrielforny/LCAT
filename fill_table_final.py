@@ -347,3 +347,14 @@ def preencher_dados_tabelas_funcao(first_word_doc_in, first_word_doc_out):
         except:
             pass
         return False
+
+# if __name__ == "__main__":
+#     sucesso = preencher_dados_tabelas_funcao(
+#         r"C:\Users\Nitro\tecnico\PGR - GRO\FORMATAÇÃO\LTCAT\MAIO 2025 - LTCAT - 22067325000124 - SETT SINALIZACAO E EQUIPAMENTOS DE TRANSITO E COMERCIO LTDA (1).rtf",
+#         r"C:\Users\Nitro\tecnico\PGR - GRO\FORMATAÇÃO\TEMPLATE\template_ltcat_padrao.docx"
+#     )
+    
+#     if sucesso:
+#         print("Processamento concluído com sucesso!")
+#     else:
+#         print("Ocorreu um erro durante o processamento.")

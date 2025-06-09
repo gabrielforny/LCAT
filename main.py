@@ -59,9 +59,9 @@ data_hoje = f'{dia_atual} de {mes_corrente} de {ano_atual}'
 data_hoje_temp = hoje.strftime('%d-%m-%Y')
 
 # # Caminho da pasta
-# pasta = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT"
+pasta = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT"
 
-# # Caminho do arquivo .docx
+# Caminho do arquivo .docx
 # template_file_path = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\FORMATAÇÃO\\TEMPLATE\\template_ltcat_padrao.docx"
 # pasta_dados = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\FORMATAÇÃO\\LTCAT"
 # pasta_executados = f"C:\\Users\\{USERNAME}\\tecnico\\PGR - GRO\\LTCAT\\EXECUTADOS"
@@ -1055,7 +1055,7 @@ def processar_arquivos(progress_label, progress_bar):
 
                     # Substituir as marcações no documento
                     substituir_marcacoes(caminho_salvar_arquivo_modificado, variaveis,
-                                         caminho_salvar_doc.replace('nome_empresa', nome_empresa).replace("mes_do_documento", numero_mes))
+                                         caminho_salvar_doc.replace('nome_empresa', nome_empresa).replace("mes_do_documento", str(numero_mes)))
 
         ler_pdf(arquivo_pdf_convertido)
         progress_label.config(text="Salvando arquivo como PDF...")
@@ -1092,7 +1092,7 @@ def processar_arquivos(progress_label, progress_bar):
         
         rtf_to_pdf(
             caminho_salvar_arquivo_modificado,
-            caminho_salvar_pdf.replace("nome_empresa", nome_empresa).replace("mes_do_documento", numero_mes))
+            caminho_salvar_pdf.replace("nome_empresa", nome_empresa).replace("mes_do_documento", str(numero_mes)))
         # Mover os arquivos processados para a pasta "Executados"
 
     mover_arquivos_para_executados()
